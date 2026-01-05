@@ -26,8 +26,9 @@ return {
       },
       mapping = cmp.mapping.preset.insert({
         -- <C-n>: down, <C-p>: up
-        ['<Tab>'] = cmp.mapping.select_next_item({ behavior = types.cmp.SelectBehavior.Insert }),
-        ['<S-Tab>'] = cmp.mapping.select_prev_item({ behavior = types.cmp.SelectBehavior.Insert }),
+        -- Tab/S-Tabは無効化してSuperMavenのTabキーを優先
+        -- ['<Tab>'] = cmp.mapping.select_next_item({ behavior = types.cmp.SelectBehavior.Insert }),
+        -- ['<S-Tab>'] = cmp.mapping.select_prev_item({ behavior = types.cmp.SelectBehavior.Insert }),
         ["<C-b>"] = cmp.mapping.scroll_docs(-4),
         ["<C-f>"] = cmp.mapping.scroll_docs(4),
         ["<C-l>"] = cmp.mapping.complete(),

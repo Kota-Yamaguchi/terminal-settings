@@ -115,8 +115,8 @@ return {
       mason_lspconfig.setup_handlers {
         -- デフォルトハンドラー（すべてのサーバーに適用）
         function(server_name)
-          -- typos_lspとpyrightとruby_lspとrubocopは個別に設定済みなのでスキップ
-          if server_name == "typos_lsp" or server_name == "pyright" or server_name == "ruby_lsp" or server_name == "rubocop" then
+          -- typos_lspとpyrightとruffとruby_lspとrubocopは個別に設定済みなのでスキップ
+          if server_name == "typos_lsp" or server_name == "pyright" or server_name == "ruff" or server_name == "ruby_lsp" or server_name == "rubocop" then
             return
           end
           require("lspconfig")[server_name].setup {
@@ -129,24 +129,49 @@ return {
     -- typos_lspの設定
     nvim_lsp.typos_lsp.setup {}
     
-    -- pyrightの設定
+    -- pyrightの設定（Python LSP）
     nvim_lsp.pyright.setup {
-      root_dir = nvim_lsp.util.root_pattern(".venv"),
-      -- cmd = { "bash", "-c", "source ./.venv/bin/activate"},
+      capabilities = capabilities,
+      root_dir = nvim_lsp.util.root_pattern(".venv", "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", ".git"),
       settings = {
         python = {
-          -- 仮想環境のルートパス
+          -- 仮想環境を自動検出
           venvPath = ".",
-          -- 仮想環境のフォルダ名
-          -- venv = ".venv",
-          pythonPath = "./.venv/bin/python",
-          -- analysis = {
-          --   extraPaths = {"."},
-          --   autoSearchPaths = true,
-          --   useLibraryCodeForTypes = true
-          -- }
-        }
-      }
+          venv = ".venv",
+          -- Pythonパスを自動検出（固定しない）
+          -- pythonPath = "./.venv/bin/python",
+          analysis = {
+            -- 型チェックを有効化
+            typeCheckingMode = "basic",
+            -- 自動インポートを有効化
+            autoImportCompletions = true,
+            -- 自動検索パスを有効化
+            autoSearchPaths = true,
+            -- ライブラリコードを型チェックに使用
+            useLibraryCodeForTypes = true,
+            -- 診断モード
+            diagnosticMode = "workspace",
+          },
+        },
+      },
+    }
+    
+    -- ruffの設定（Pythonリンター/フォーマッター）
+    nvim_lsp.ruff.setup {
+      capabilities = capabilities,
+      root_dir = nvim_lsp.util.root_pattern("pyproject.toml", "ruff.toml", ".ruff.toml", "setup.py", ".git"),
+      init_options = {
+        settings = {
+          -- リンターを有効化
+          lint = {
+            enabled = true,
+          },
+          -- フォーマッターを有効化
+          format = {
+            enabled = true,
+          },
+        },
+      },
     }
     -- VS Code風のキーバインド設定
     -- ホバー情報 (Kはそのまま)

@@ -21,6 +21,14 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 vim.opt.number = true
+
+-- クリップボード設定（macOSでシステムクリップボードと統合）
+vim.opt.clipboard = "unnamedplus"
+
+-- macOSでCmd+C/Cmd+Vでコピー/ペースト
+vim.keymap.set({ "n", "v", "i" }, "<D-c>", '"+y', { desc = "Copy to clipboard" })
+vim.keymap.set({ "n", "v", "i" }, "<D-v>", '"+p', { desc = "Paste from clipboard" })
+vim.keymap.set({ "n", "v", "i" }, "<D-x>", '"+x', { desc = "Cut to clipboard" })
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
@@ -38,8 +46,9 @@ require("lazy").setup({
 vim.keymap.set("n", "<C-h>", "<cmd>bprev<CR>")
 vim.keymap.set("n", "<C-l>", "<cmd>bnext<CR>")
 
-vim.keymap.set("i", "jj", "<esc>")
-vim.keymap.set("i", "kk", "<esc>")
+-- Escキーの代替: jjで挿入モードから抜ける
+vim.keymap.set("i", "jj", "<esc>", { desc = "Exit insert mode" })
+vim.keymap.set("i", "kk", "<esc>", { desc = "Exit insert mode" })
 
 -- 診断の行ハイライト設定
 vim.api.nvim_set_hl(0, "DiagnosticErrorLine", { bg = "#4d1a1a", fg = "#ff6b6b", underline = true })
